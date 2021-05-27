@@ -53,7 +53,7 @@ jobs:
     - name: Preload and Compile the xjy
       run: |
         cd xjy
-        make build_debian=y build
+        make build_archlinux=y build_ubuntu=y build_debian=y build
 
     - name: Upload Firmware to Artifacts
       uses: actions/upload-artifact@main

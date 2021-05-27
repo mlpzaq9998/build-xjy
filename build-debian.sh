@@ -7,7 +7,7 @@ set -e
 set -o pipefail
 
 os="debian"
-os_ver="focal"
+os_ver="buster"
 rootsize=1000
 
 tmpdir="tmp"

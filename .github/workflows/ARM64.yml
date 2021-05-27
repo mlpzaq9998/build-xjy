@@ -1,0 +1,95 @@
+#=======================================================
+# Description: Build xjy using GitHub Actions
+# https://github.com/Hyy2001X/AutoBuild-Actions
+# Lisence: MIT
+# Author: P3TERX
+# Modify: Hyy2001X
+#=======================================================
+
+name: AutoBuild-ARM64
+
+on:
+  repository_dispatch:
+
+#  schedule:
+#    - cron: 0 11 * * *
+
+  watch:
+    types: [started]
+
+env:
+  REPO_URL: https://github.com/mlpzaq9998/build-xjy
+  REPO_BRANCH: master
+  UPLOAD_RELEASE: true
+  UPLOAD_FIRMWARE: false
+  UPLOAD_BIN_DIR: false
+  REMOVE_USELESS_FILES: true
+  REMOVE_OLD_RELEASE: false
+  REMOVE_WORKFLOW_RUNS: true
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization Environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E apt-get update
+        sudo -E apt-get install bsdtar axel tree debootstrap -y
+        sudo timedatectl set-timezone "Asia/Shanghai"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+      
+    - name: Clone source code
+      run: |
+        git clone -b $REPO_BRANCH $REPO_URL xjy
+        ln -sf /workdir/xjy $GITHUB_WORKSPACE/xjy
+
+    - name: Preload and Compile the xjy
+      run: |
+        cd xjy
+        make build_debian=y build
+
+    - name: Upload Firmware to Artifacts
+      uses: actions/upload-artifact@main
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      with:
+        name: xjy_Firmware_${{ env.Artifacts_DATE }}
+        path: xjy/output/release
+        
+    - name: Upload bin directory to Artifacts
+      uses: actions/upload-artifact@main
+      if: env.UPLOAD_BIN_DIR == 'true' && !cancelled()
+      with:
+        name: xjy_bin_${{ env.Artifacts_DATE }}
+        path: xjy/output
+
+    - name: Upload Firmware to Release
+      uses: softprops/action-gh-release@v1
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: AutoUpdate
+        files: xjy/output/release/*
+        
+    - name: Remove old Release
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: env.REMOVE_OLD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 3
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Remove workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      if: env.REMOVE_WORKFLOW_RUNS == 'true' && !cancelled()
+      with:
+        retain_days: 1
+        keep_minimum_runs: 3

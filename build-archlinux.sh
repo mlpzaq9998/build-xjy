@@ -21,7 +21,7 @@ DTB=rtd-1295-xjy-2GB.dtb
 
 chroot_prepare() {
 	rm -rf $rootfs_mount_point/etc/resolv.conf
-	if [ -z "$TRAVIS" ]; then
+	if [ -z "$GITHUB_ACTIONS" ]; then
 		echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo' > $rootfs_mount_point/etc/pacman.d/mirrorlist
 		echo "nameserver 119.29.29.29" > $rootfs_mount_point/etc/resolv.conf
 	else
@@ -35,7 +35,7 @@ ext_init_param() {
 
 chroot_post() {
 	ln -sf /run/systemd/resolve/resolv.conf $rootfs_mount_point/etc/resolv.conf
-	if [ -n "$TRAVIS" ]; then
+	if [ -n "$GITHUB_ACTIONS" ]; then
 		echo 'Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo' > $rootfs_mount_point/etc/pacman.d/mirrorlist
 	fi
 }

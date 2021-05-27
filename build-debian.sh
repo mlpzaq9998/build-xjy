@@ -19,7 +19,7 @@ cur_dir=$(pwd)
 DTB=rtd-1295-xjy-2GB.dtb
 
 chroot_prepare() {
-	if [ -z "$TRAVIS" ]; then
+	if [ -z "$GITHUB_ACTIONS" ]; then
 		echo "deb https://mirrors.ustc.edu.cn/debian/ ${os_ver} main contrib non-free" > $rootfs_mount_point/etc/apt/sources.list
 		echo "nameserver 119.29.29.29" > $rootfs_mount_point/etc/resolv.conf
 	else
@@ -46,7 +46,7 @@ deb https://mirrors.ustc.edu.cn/debian/ ${os_ver}-backports main contrib non-fre
 generate_rootfs() {
 	local rootfs=$1
 	mirrorurl="https://mirrors.ustc.edu.cn/debian"
-	if [ -n "$TRAVIS" ]; then
+	if [ -n "$GITHUB_ACTIONS" ]; then
 		mirrorurl="http://httpredir.debian.org/debian"
 	fi
 	echo "generate debian rootfs to $rootfs by debootstrap..."

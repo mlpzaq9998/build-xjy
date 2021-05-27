@@ -19,7 +19,7 @@ cur_dir=$(pwd)
 DTB=rtd-1295-xjy-2GB.dtb
 
 chroot_prepare() {
-	if [ -z "$TRAVIS" ]; then
+	if [ -z "$GITHUB_ACTIONS" ]; then
 		sed -i 's#http://ports.ubuntu.com#http://mirrors.ustc.edu.cn#' $rootfs_mount_point/etc/apt/sources.list
 		echo "nameserver 119.29.29.29" > $rootfs_mount_point/etc/resolv.conf
 	else
@@ -32,7 +32,7 @@ ext_init_param() {
 }
 
 chroot_post() {
-	if [ -z "$TRAVIS" ]; then
+	if [ -z "$GITHUB_ACTIONS" ]; then
 		sed -i 's#http://#https://#' $rootfs_mount_point/etc/apt/sources.list
 	else
 		sed -i 's#http://ports.ubuntu.com#https://mirrors.ustc.edu.cn#' $rootfs_mount_point/etc/apt/sources.list

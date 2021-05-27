@@ -19,7 +19,7 @@ cur_dir=$(pwd)
 DTB=rtd-1295-xjy-2GB.dtb
 
 chroot_prepare() {
-	if [ -z "$TRAVIS" ]; then
+	if [ -z "$GITHUB_ACTIONS" ]; then
 		sed -i 's#http://dl-cdn.alpinelinux.org#https://mirrors.tuna.tsinghua.edu.cn#' $rootfs_mount_point/etc/apk/repositories
 		echo "nameserver 119.29.29.29" > $rootfs_mount_point/etc/resolv.conf
 	else
@@ -32,7 +32,7 @@ ext_init_param() {
 }
 
 chroot_post() {
-	if [ -n "$TRAVIS" ]; then
+	if [ -n "$GITHUB_ACTIONS" ]; then
 		sed -i 's#http://dl-cdn.alpinelinux.org#https://mirrors.tuna.tsinghua.edu.cn#' $rootfs_mount_point/etc/apk/repositories
 	fi
 }

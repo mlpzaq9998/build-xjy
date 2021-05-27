@@ -38,7 +38,7 @@ $(DL_KERNEL)/modules.tar.xz:
 ifeq ($(build_archlinux),y)
 ARCHLINUX_PKG := ArchLinuxARM-aarch64-latest.tar.gz
 
-ifneq ($(TRAVIS),)
+ifneq ($(GITHUB_ACTIONS),)
 ARCHLINUX_URL_BASE := http://os.archlinuxarm.org/os
 else
 ARCHLINUX_URL_BASE := https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os
@@ -65,7 +65,7 @@ ALPINE_BRANCH := v3.13
 ALPINE_VERSION := 3.13.5
 ALPINE_PKG := alpine-minirootfs-$(ALPINE_VERSION)-aarch64.tar.gz
 
-ifneq ($(TRAVIS),)
+ifneq ($(GITHUB_ACTIONS),)
 ALPINE_URL_BASE := http://dl-cdn.alpinelinux.org/alpine/$(ALPINE_BRANCH)/releases/aarch64
 else
 ALPINE_URL_BASE := https://mirrors.tuna.tsinghua.edu.cn/alpine/$(ALPINE_BRANCH)/releases/aarch64
@@ -90,7 +90,7 @@ endif
 ifeq ($(build_ubuntu),y)
 UBUNTU_PKG := ubuntu-base-20.04.2-base-arm64.tar.gz
 
-ifneq ($(TRAVIS),)
+ifneq ($(GITHUB_ACTIONS),)
 UBUNTU_URL_BASE := http://cdimage.ubuntu.com/ubuntu-base/releases/focal/release
 else
 UBUNTU_URL_BASE := https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/ubuntu-base/releases/focal/release

@@ -21,4 +21,4 @@ fw = kernelDT rtd-1295-xjy-2GB.dtb 0x02100000
 fw = linuxKernel Image 0x03000000 
 
 ### part = (name mount_point filesystem file size)
-part = rootfs / ext4 rootfs.bin 14495514624
+part = rootfs / ext4 rootfs.bin 7516192768
